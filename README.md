@@ -1,6 +1,18 @@
 # FortiKeep
 
-openfortivpn の接続を「保ち続ける」ための小さな Electron アプリ（macOS / Windows）。トグルで ON/OFF し、裏で ping 監視して切断時に自動再接続する常駐ツール。
+> **openfortivpn を、トグル一つで。落ちても、勝手に戻る。**
+
+FortiKeep は openfortivpn を「いちばん手軽に・繋ぎっぱなしで」使うための超シンプルな常駐アプリ（macOS / Windows）。ターミナルもコマンドも要りません。トグルを ON にするだけで接続し、`modem hanging up` で切れても裏で監視して自動で張り直します。
+
+## なぜ FortiKeep？ — 売り
+
+- 🟢 **とにかくシンプル** — UI はトグル1つ。接続も切断もこれだけ。コマンドも端末も不要。
+- 🔁 **落ちても勝手に戻る** — keepalive ping ＋ 指数バックオフの自動再接続。openfortivpn 最大の不満「アイドルで切れる / `modem hanging up`」を、ほっといても回復する形で解消。ここが本当の価値。
+- 📄 **設定はドロップするだけ** — 既存の openfortivpn `.conf` をウィンドウに放り込めば全項目が自動で埋まる。証明書（trusted-cert）も初回ログから自動提案。
+- 🪶 **軽い・じゃまにならない** — コンパクトなウィンドウ。ログは普段たたんでおける常駐向き UI。
+- 🔒 **ローカル完結** — 待ち受けポートなし・外部通信なし。設定はローカルに `0600` 保存（元の openfortivpn `.conf` と同じ扱い）。
+
+openfortivpn の CLI をそのまま叩くより手軽で、GUI ラッパーの中でも **「トグル＋自動復帰」だけに振り切った最小構成**。*繋いだら、あとは忘れていい* ためのアプリです。
 
 ## 機能
 
@@ -12,7 +24,7 @@ openfortivpn の接続を「保ち続ける」ための小さな Electron アプ
 - **設定フォーム** — host / port / user / password / trusted-cert / 追加 .conf 行 / keepalive / 再接続をフォームで編集し、アプリ内に保存。
 - **設定ファイルのドロップ取り込み** — 既存の openfortivpn `.conf` をウィンドウにドロップすると、`key = value` を解析して各項目へ自動反映・保存。未知のキーは「追加の設定行」へ振り分け。
 - **証明書の自動提案** — 初回接続で未知の証明書を検出すると、ログから `trusted-cert` を自動抽出してワンクリックで保存。
-- **秘密情報の保護** — 設定と sudo パスワードは OS の暗号化（Electron `safeStorage` = Keychain / DPAPI）で保存。接続時のみ `0600` の一時 conf を生成し、切断時に削除。
+- **設定の保存** — host / password 等はローカルに `0600`（本人のみ読取可）で保存。OS の暗号化（Electron `safeStorage` = Keychain / DPAPI）が使えれば暗号化、使えなければ平文 — いずれも元の openfortivpn `.conf` と同等の扱い。接続時のみ `0600` の一時 conf を生成し、切断時に削除。sudo パスワードは「記憶」した場合のみ別ファイルに保存（管理者権限のため、不安なら記憶せず毎回入力 or passwordless sudo を推奨）。
 
 ## 必要なもの
 

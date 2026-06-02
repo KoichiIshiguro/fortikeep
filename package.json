@@ -1,0 +1,38 @@
+{
+  "name": "fortikeep",
+  "version": "0.1.0",
+  "description": "openfortivpn の接続をトグルで ON/OFF し、ping で常時監視して落ちたら自動再接続する常駐アプリ (mac/win)",
+  "main": "src/main.js",
+  "author": "ishiguro@saltybullet.com",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.saltybullet.fortikeep",
+    "productName": "FortiKeep",
+    "files": [
+      "src/**/*",
+      "renderer/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
+  }
+}

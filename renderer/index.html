@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';" />
+  <title>OpenFortiVPN Manager</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot" id="statusDot"></span>
+      <div>
+        <div class="title">OpenFortiVPN Manager</div>
+        <div class="subtitle" id="statusText">未接続</div>
+      </div>
+    </div>
+    <label class="switch" title="接続 / 切断">
+      <input type="checkbox" id="toggle" />
+      <span class="slider"></span>
+    </label>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="status">状態</button>
+    <button class="tab" data-tab="settings">設定</button>
+  </nav>
+
+  <main>
+    <!-- 状態タブ -->
+    <section id="tab-status" class="tabpane active">
+      <div id="certBanner" class="banner hidden">
+        <span id="certText"></span>
+        <button id="certApply" class="btn small">trusted-cert に設定して保存</button>
+      </div>
+
+      <div class="cards">
+        <div class="card"><div class="k">状態</div><div class="v" id="cardState">—</div></div>
+        <div class="card"><div class="k">接続時間</div><div class="v" id="cardUptime">—</div></div>
+        <div class="card"><div class="k">再接続試行</div><div class="v" id="cardAttempts">0</div></div>
+        <div class="card"><div class="k">ping 失敗</div><div class="v" id="cardPing">0</div></div>
+      </div>
+
+      <div class="logwrap">
+        <div class="logbar">
+          <span>ログ</span>
+          <button id="clearLog" class="btn ghost small">クリア</button>
+        </div>
+        <pre id="log" class="log"></pre>
+      </div>
+    </section>
+
+    <!-- 設定タブ -->
+    <section id="tab-settings" class="tabpane">
+      <form id="settingsForm">
+        <fieldset>
+          <legend>接続先 (openfortivpn)</legend>
+          <div class="grid">
+            <label>ホスト<input name="host" placeholder="vpn.example.com" /></label>
+            <label>ポート<input name="port" type="number" value="443" /></label>
+            <label>ユーザー名<input name="username" autocomplete="off" /></label>
+            <label>パスワード<input name="vpnPassword" type="password" autocomplete="off" /></label>
+            <label class="full">trusted-cert (証明書ダイジェスト)<input name="trustedCert" placeholder="未設定なら初回接続時にログから自動提案" /></label>
+            <label class="full">追加の設定行 (.conf にそのまま追記)
+              <textarea name="extraConfig" rows="3" placeholder="例:&#10;set-routes = 1&#10;pppd-use-peerdns = 1"></textarea>
+            </label>
+            <label class="full">openfortivpn バイナリパス<input name="binaryPath" placeholder="/opt/homebrew/bin/openfortivpn" /></label>
+            <label class="check"><input type="checkbox" name="verbose" /> 詳細ログ (-v)</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>keepalive / 切断監視</legend>
+          <p class="hint">トンネル経由で到達できる内部ホストに定期 ping を送り、NAT を維持しつつ切断を検知します。</p>
+          <div class="grid">
+            <label class="check"><input type="checkbox" name="keepaliveEnabled" /> keepalive を有効化</label>
+            <label>監視先ホスト<input name="keepaliveHost" placeholder="200.13.6.209 など内部ホスト" /></label>
+            <label>間隔 (秒)<input name="keepaliveIntervalSec" type="number" value="20" /></label>
+            <label>失敗で再接続する回数<input name="keepaliveFailThreshold" type="number" value="3" /></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>自動再接続</legend>
+          <div class="grid">
+            <label class="check"><input type="checkbox" name="reconnectEnabled" /> 切断時に自動再接続</label>
+            <label>初回待機 (秒)<input name="reconnectInitialSec" type="number" value="2" /></label>
+            <label>最大待機 (秒)<input name="reconnectMaxSec" type="number" value="30" /></label>
+          </div>
+        </fieldset>
+
+        <div class="formfoot">
+          <span id="saveHint" class="hint"></span>
+          <button type="submit" class="btn">保存</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- sudo パスワードモーダル -->
+  <div id="sudoModal" class="modal hidden">
+    <div class="modaldlg">
+      <h3>管理者パスワード</h3>
+      <p class="hint">openfortivpn は root 権限が必要です。Mac のログインパスワード (sudo) を入力してください。</p>
+      <input id="sudoInput" type="password" placeholder="パスワード" />
+      <label class="check"><input type="checkbox" id="sudoRemember" /> このパスワードを安全に記憶する</label>
+      <div class="modalfoot">
+        <button id="sudoCancel" class="btn ghost">キャンセル</button>
+        <button id="sudoOk" class="btn">接続</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

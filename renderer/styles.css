@@ -121,4 +121,18 @@ textarea { resize: vertical; }
 .modaldlg input[type=password] { width: 100%; margin: 10px 0; }
 .modalfoot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
 
+/* drop overlay */
+.dropoverlay {
+  position: fixed; inset: 0; z-index: 60; pointer-events: none;
+  background: rgba(15, 20, 32, 0.82);
+  display: flex; align-items: center; justify-content: center;
+}
+.dropbox {
+  border: 2px dashed var(--accent); border-radius: 16px;
+  padding: 44px 60px; background: var(--panel); color: var(--text);
+  font-size: 16px; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+.dropicon { font-size: 40px; color: var(--accent); margin-bottom: 10px; }
+.dropnote { margin: 0 0 14px; padding: 9px 12px; background: var(--panel); border: 1px dashed var(--line); border-radius: 8px; }
+
 .hidden { display: none !important; }

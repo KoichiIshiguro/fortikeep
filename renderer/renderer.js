@@ -60,8 +60,7 @@ async function loadSettings() {
   }
 }
 
-els.form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+function collectForm() {
   const data = {};
   for (const el of els.form.elements) {
     if (!el.name) continue;
@@ -69,9 +68,89 @@ els.form.addEventListener('submit', async (e) => {
     else if (el.type === 'number') data[el.name] = Number(el.value);
     else data[el.name] = el.value;
   }
-  await window.api.saveSettings(data);
+  return data;
+}
+
+function setField(name, value) {
+  const el = els.form.elements[name];
+  if (!el) return;
+  if (el.type === 'checkbox') el.checked = !!value;
+  else el.value = value;
+}
+
+els.form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  await window.api.saveSettings(collectForm());
   els.saveHint.textContent = '保存しました ✓';
   setTimeout(() => (els.saveHint.textContent = ''), 2500);
+});
+
+// ---- 設定ファイルのドロップ取り込み ----
+// openfortivpn の .conf 形式 (key = value) をパースしてフォームに反映する。
+// 既知キーはフィールドへ、未知の行は「追加の設定行」へ振り分ける。
+const KNOWN_KEYS = {
+  host: 'host',
+  port: 'port',
+  username: 'username',
+  password: 'vpnPassword',
+  'trusted-cert': 'trustedCert',
+};
+
+function parseOfvConfig(text) {
+  const fields = {};
+  const extras = [];
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#') || line.startsWith(';')) continue;
+    const m = line.match(/^([A-Za-z0-9_-]+)\s*=\s*(.*)$/);
+    const key = m && m[1].toLowerCase();
+    if (m && KNOWN_KEYS[key]) {
+      const field = KNOWN_KEYS[key];
+      const val = m[2].trim();
+      fields[field] = field === 'port' ? Number(val) : val;
+    } else {
+      extras.push(line);
+    }
+  }
+  fields.extraConfig = extras.join('\n');
+  return fields;
+}
+
+async function applyDroppedConfig(text, fname) {
+  const parsed = parseOfvConfig(text);
+  const known = Object.keys(parsed).filter((k) => k !== 'extraConfig');
+  if (!known.length && !parsed.extraConfig) {
+    appendLog(`⚠ ${fname || 'ファイル'} から設定を読み取れませんでした`);
+    return;
+  }
+  for (const [k, v] of Object.entries(parsed)) setField(k, v);
+  await window.api.saveSettings(collectForm());
+  document.querySelector('.tab[data-tab="settings"]').click();
+  els.saveHint.textContent = `${fname} を読み込んで保存しました ✓`;
+  setTimeout(() => (els.saveHint.textContent = ''), 3500);
+  appendLog(`✓ ${fname} を読み込み: ${known.join(', ')}${parsed.extraConfig ? ' (+追加行)' : ''}`);
+}
+
+const dropOverlay = $('#dropOverlay');
+window.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+  dropOverlay.classList.remove('hidden');
+});
+window.addEventListener('dragleave', (e) => {
+  if (!e.relatedTarget) dropOverlay.classList.add('hidden');
+});
+window.addEventListener('drop', async (e) => {
+  e.preventDefault();
+  dropOverlay.classList.add('hidden');
+  const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    await applyDroppedConfig(text, file.name);
+  } catch (err) {
+    appendLog('⚠ ファイル読み込みエラー: ' + err.message);
+  }
 });
 
 // ---- ログ ----
@@ -163,14 +242,7 @@ els.sudoInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') els.su
 els.certApply.addEventListener('click', async () => {
   if (!suggestedCert) return;
   els.form.elements['trustedCert'].value = suggestedCert;
-  const data = {};
-  for (const el of els.form.elements) {
-    if (!el.name) continue;
-    if (el.type === 'checkbox') data[el.name] = el.checked;
-    else if (el.type === 'number') data[el.name] = Number(el.value);
-    else data[el.name] = el.value;
-  }
-  await window.api.saveSettings(data);
+  await window.api.saveSettings(collectForm());
   els.certBanner.classList.add('hidden');
   appendLog('✓ trusted-cert を保存しました。再接続すると証明書が信頼されます。');
 });

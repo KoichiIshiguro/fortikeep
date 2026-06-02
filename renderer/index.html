@@ -53,6 +53,7 @@
     <!-- 設定タブ -->
     <section id="tab-settings" class="tabpane">
       <form id="settingsForm">
+        <p class="hint dropnote">💡 既存の openfortivpn 設定ファイル (.conf) をウィンドウにドロップすると、自動で各項目に取り込まれます。</p>
         <fieldset>
           <legend>接続先 (openfortivpn)</legend>
           <div class="grid">
@@ -108,6 +109,14 @@
         <button id="sudoCancel" class="btn ghost">キャンセル</button>
         <button id="sudoOk" class="btn">接続</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 設定ファイルのドロップ受け取り -->
+  <div id="dropOverlay" class="dropoverlay hidden">
+    <div class="dropbox">
+      <div class="dropicon">⤓</div>
+      設定ファイル (.conf) をドロップして読み込み
     </div>
   </div>
 

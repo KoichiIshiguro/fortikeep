@@ -1,6 +1,6 @@
 {
   "name": "fortikeep",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "openfortivpn の接続をトグルで ON/OFF し、ping で常時監視して落ちたら自動再接続する常駐アプリ (mac/win)",
   "main": "src/main.js",
   "author": "ishiguro@saltybullet.com",

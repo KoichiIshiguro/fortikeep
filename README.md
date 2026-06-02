@@ -10,6 +10,7 @@ openfortivpn の接続を「保ち続ける」ための小さな Electron アプ
   2. keepalive ping の連続失敗
 - **keepalive ping** — トンネル経由の内部ホストへ定期 ping。NAT セッションを維持して「アイドルだと切れる」を抑止しつつ、切断検知も兼ねる。
 - **設定フォーム** — host / port / user / password / trusted-cert / 追加 .conf 行 / keepalive / 再接続をフォームで編集し、アプリ内に保存。
+- **設定ファイルのドロップ取り込み** — 既存の openfortivpn `.conf` をウィンドウにドロップすると、`key = value` を解析して各項目へ自動反映・保存。未知のキーは「追加の設定行」へ振り分け。
 - **証明書の自動提案** — 初回接続で未知の証明書を検出すると、ログから `trusted-cert` を自動抽出してワンクリックで保存。
 - **秘密情報の保護** — 設定と sudo パスワードは OS の暗号化（Electron `safeStorage` = Keychain / DPAPI）で保存。接続時のみ `0600` の一時 conf を生成し、切断時に削除。
 

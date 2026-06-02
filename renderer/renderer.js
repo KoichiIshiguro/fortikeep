@@ -6,11 +6,13 @@ const els = {
   toggle: $('#toggle'),
   statusDot: $('#statusDot'),
   statusText: $('#statusText'),
-  cardState: $('#cardState'),
   cardUptime: $('#cardUptime'),
   cardAttempts: $('#cardAttempts'),
   cardPing: $('#cardPing'),
   log: $('#log'),
+  logToggle: $('#logToggle'),
+  logChev: $('#logChev'),
+  logBody: $('#logBody'),
   clearLog: $('#clearLog'),
   form: $('#settingsForm'),
   saveHint: $('#saveHint'),
@@ -165,6 +167,14 @@ function appendLog(line) {
 }
 els.clearLog.addEventListener('click', () => (els.log.textContent = ''));
 
+els.logToggle.addEventListener('click', () => {
+  const hidden = els.logBody.classList.toggle('hidden');
+  const open = !hidden;
+  els.logChev.classList.toggle('open', open);
+  window.api.setLogOpen(open);
+  if (open) els.log.scrollTop = els.log.scrollHeight;
+});
+
 // ---- 状態表示 ----
 function fmtUptime(ms) {
   const s = Math.floor(ms / 1000);
@@ -177,7 +187,6 @@ function fmtUptime(ms) {
 function renderStatus(st) {
   const label = STATE_LABELS[st.state] || st.state;
   els.statusText.textContent = st.lastError ? `${label} — ${st.lastError}` : label;
-  els.cardState.textContent = label;
   els.cardAttempts.textContent = st.attempts;
   els.cardPing.textContent = st.keepaliveFails;
   els.statusDot.className = 'dot ' + st.state;

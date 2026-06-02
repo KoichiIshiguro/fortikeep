@@ -26,13 +26,13 @@ body {
 /* topbar */
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 20px; background: var(--panel); border-bottom: 1px solid var(--line);
+  padding: 10px 14px; background: var(--panel); border-bottom: 1px solid var(--line);
 }
-.brand { display: flex; align-items: center; gap: 12px; }
-.title { font-weight: 700; }
-.subtitle { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.title { font-weight: 700; font-size: 14px; }
+.subtitle { color: var(--muted); font-size: 11px; margin-top: 1px; }
 .dot {
-  width: 14px; height: 14px; border-radius: 50%; background: var(--muted);
+  width: 12px; height: 12px; border-radius: 50%; background: var(--muted);
   box-shadow: 0 0 0 4px rgba(255,255,255,0.04);
 }
 .dot.connected { background: var(--ok); }
@@ -42,43 +42,54 @@ body {
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 
 /* switch */
-.switch { position: relative; display: inline-block; width: 58px; height: 32px; }
+.switch { position: relative; display: inline-block; width: 52px; height: 30px; }
 .switch input { display: none; }
 .slider {
   position: absolute; inset: 0; cursor: pointer; background: #38425e;
   border-radius: 32px; transition: 0.25s;
 }
 .slider::before {
-  content: ""; position: absolute; height: 24px; width: 24px; left: 4px; top: 4px;
+  content: ""; position: absolute; height: 22px; width: 22px; left: 4px; top: 4px;
   background: #fff; border-radius: 50%; transition: 0.25s;
 }
 .switch input:checked + .slider { background: var(--accent); }
-.switch input:checked + .slider::before { transform: translateX(26px); }
+.switch input:checked + .slider::before { transform: translateX(22px); }
 
 /* tabs */
-.tabs { display: flex; gap: 4px; padding: 10px 16px 0; background: var(--panel); }
+.tabs { display: flex; gap: 4px; padding: 6px 10px 0; background: var(--panel); }
 .tab {
-  background: none; border: none; color: var(--muted); padding: 8px 16px;
-  cursor: pointer; border-radius: 8px 8px 0 0; font-size: 13px;
+  background: none; border: none; color: var(--muted); padding: 6px 14px;
+  cursor: pointer; border-radius: 8px 8px 0 0; font-size: 12px;
 }
 .tab.active { color: var(--text); background: var(--bg); font-weight: 600; }
 
-main { flex: 1; overflow: auto; padding: 18px 20px; }
+main { flex: 1; overflow: auto; padding: 12px 14px; }
 .tabpane { display: none; }
 .tabpane.active { display: block; }
 
-/* cards */
-.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
-.card .k { color: var(--muted); font-size: 11px; }
-.card .v { font-size: 18px; font-weight: 700; margin-top: 4px; }
+/* compact stat strip */
+.statline { display: flex; gap: 8px; margin-bottom: 12px; }
+.stat {
+  flex: 1; background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 7px 10px; display: flex; flex-direction: column; gap: 2px; min-width: 0;
+}
+.stat .k { color: var(--muted); font-size: 10px; }
+.stat .v { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* log */
-.logwrap { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.logbar { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+/* collapsible log */
+.logsection { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.logtoggle {
+  width: 100%; text-align: left; background: none; border: none; color: var(--text);
+  padding: 9px 12px; cursor: pointer; font-size: 12px; font-weight: 600;
+}
+.logtoggle:hover { background: var(--panel2); }
+.chev { display: inline-block; transition: transform 0.15s; color: var(--muted); margin-right: 4px; }
+.chev.open { transform: rotate(90deg); }
+.logbody { border-top: 1px solid var(--line); }
+.logbar { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 11px; }
 .log {
-  margin: 0; padding: 12px; height: 300px; overflow: auto;
-  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px;
+  margin: 0; padding: 10px; height: 240px; overflow: auto;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 11px;
   line-height: 1.5; white-space: pre-wrap; word-break: break-all; color: #c7d2e6;
 }
 

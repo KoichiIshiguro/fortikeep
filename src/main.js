@@ -21,11 +21,12 @@ if (!gotLock) {
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 860,
-    height: 720,
-    minWidth: 680,
-    minHeight: 560,
-    title: 'OpenFortiVPN Manager',
+    width: 460,
+    height: 360,
+    minWidth: 380,
+    minHeight: 300,
+    useContentSize: true,
+    title: 'FortiKeep',
     backgroundColor: '#0f1420',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -92,4 +93,13 @@ ipcMain.handle('vpn:connect', async (_e, sudoPassword, rememberSudo) => {
 ipcMain.handle('vpn:disconnect', async () => {
   await vpn.disconnect();
   return { ok: true };
+});
+
+// ログ開閉に合わせてウィンドウの高さを伸縮
+const COMPACT_H = 360;
+const EXPANDED_H = 600;
+ipcMain.on('ui:logOpen', (_e, open) => {
+  if (!win || win.isDestroyed()) return;
+  const [w] = win.getContentSize();
+  win.setContentSize(w, open ? EXPANDED_H : COMPACT_H, true);
 });

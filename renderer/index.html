@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';" />
-  <title>OpenFortiVPN Manager</title>
+  <title>FortiKeep</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,7 +11,7 @@
     <div class="brand">
       <span class="dot" id="statusDot"></span>
       <div>
-        <div class="title">OpenFortiVPN Manager</div>
+        <div class="title">FortiKeep</div>
         <div class="subtitle" id="statusText">未接続</div>
       </div>
     </div>
@@ -34,19 +34,18 @@
         <button id="certApply" class="btn small">trusted-cert に設定して保存</button>
       </div>
 
-      <div class="cards">
-        <div class="card"><div class="k">状態</div><div class="v" id="cardState">—</div></div>
-        <div class="card"><div class="k">接続時間</div><div class="v" id="cardUptime">—</div></div>
-        <div class="card"><div class="k">再接続試行</div><div class="v" id="cardAttempts">0</div></div>
-        <div class="card"><div class="k">ping 失敗</div><div class="v" id="cardPing">0</div></div>
+      <div class="statline">
+        <div class="stat"><span class="k">接続時間</span><span class="v" id="cardUptime">—</span></div>
+        <div class="stat"><span class="k">再接続</span><span class="v" id="cardAttempts">0</span></div>
+        <div class="stat"><span class="k">ping失敗</span><span class="v" id="cardPing">0</span></div>
       </div>
 
-      <div class="logwrap">
-        <div class="logbar">
-          <span>ログ</span>
-          <button id="clearLog" class="btn ghost small">クリア</button>
+      <div class="logsection">
+        <button class="logtoggle" id="logToggle"><span class="chev" id="logChev">▸</span> ログ</button>
+        <div class="logbody hidden" id="logBody">
+          <div class="logbar"><span class="hint">接続ログ</span><button id="clearLog" class="btn ghost small">クリア</button></div>
+          <pre id="log" class="log"></pre>
         </div>
-        <pre id="log" class="log"></pre>
       </div>
     </section>
 

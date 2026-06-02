@@ -12,5 +12,6 @@ contextBridge.exposeInMainWorld('api', {
   onStatus: (cb) => ipcRenderer.on('vpn:status', (_e, s) => cb(s)),
   onLog: (cb) => ipcRenderer.on('vpn:log', (_e, l) => cb(l)),
   onCert: (cb) => ipcRenderer.on('vpn:cert', (_e, d) => cb(d)),
+  setLogOpen: (open) => ipcRenderer.send('ui:logOpen', open),
   platform: process.platform,
 });

@@ -27,6 +27,7 @@ function createWindow() {
     minHeight: 300,
     useContentSize: true,
     title: 'FortiKeep',
+    icon: path.join(__dirname, '..', 'assets', 'icon-512.png'),
     backgroundColor: '#0f1420',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
